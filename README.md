@@ -15,6 +15,7 @@ La aplicación permite sumar cada denominación de forma individual, agregar die
 - Total general en pesos mexicanos.
 - Resumen de billetes, monedas y piezas.
 - Guardado automático de la sesión en `localStorage`.
+- Exportación del corte diario a un archivo Excel `.xlsx` con fórmulas y totales.
 - Reinicio del conteo con confirmación.
 - Interfaz responsive con prioridad para dispositivos móviles.
 
@@ -81,6 +82,18 @@ currency-count/
 El conteo se guarda únicamente en el almacenamiento local del navegador. No se utiliza una base de datos y la información no se envía a ningún servidor.
 
 Limpiar los datos del sitio en el navegador también elimina la sesión guardada.
+
+## Exportar el corte diario
+
+Después de registrar al menos una pieza, utiliza **Exportar Excel** en la barra inferior. El archivo incluye:
+
+- Fecha y zona horaria del corte.
+- Denominación y tipo de efectivo.
+- Cantidad registrada por denominación.
+- Subtotales calculados con fórmulas editables.
+- Total contado y resumen de piezas, billetes y monedas.
+
+El archivo se descarga como `corte-pesos-AAAA-MM-DD.xlsx`.
 
 ## Imágenes de billetes y monedas
 

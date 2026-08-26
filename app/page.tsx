@@ -2,32 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
-
-type MoneyItem = {
-  id: string;
-  value: number;
-  label: string;
-  image: string;
-  type: "coin" | "bill";
-};
-
-const MONEY: MoneyItem[] = [
-  { id: "coin-005", value: 5, label: "5¢", image: "/money/coin-005.png", type: "coin" },
-  { id: "coin-010", value: 10, label: "10¢", image: "/money/coin-010.png", type: "coin" },
-  { id: "coin-020", value: 20, label: "20¢", image: "/money/coin-020.png", type: "coin" },
-  { id: "coin-050", value: 50, label: "50¢", image: "/money/coin-050.png", type: "coin" },
-  { id: "coin-1", value: 100, label: "$1", image: "/money/coin-1.png", type: "coin" },
-  { id: "coin-2", value: 200, label: "$2", image: "/money/coin-2.png", type: "coin" },
-  { id: "coin-5", value: 500, label: "$5", image: "/money/coin-5.png", type: "coin" },
-  { id: "coin-10", value: 1000, label: "$10", image: "/money/coin-10.png", type: "coin" },
-  { id: "coin-20", value: 2000, label: "$20", image: "/money/coin-20.png", type: "coin" },
-  { id: "bill-20", value: 2000, label: "$20", image: "/money/bill-20.png", type: "bill" },
-  { id: "bill-50", value: 5000, label: "$50", image: "/money/bill-50.png", type: "bill" },
-  { id: "bill-100", value: 10000, label: "$100", image: "/money/bill-100.png", type: "bill" },
-  { id: "bill-200", value: 20000, label: "$200", image: "/money/bill-200.png", type: "bill" },
-  { id: "bill-500", value: 50000, label: "$500", image: "/money/bill-500.png", type: "bill" },
-  { id: "bill-1000", value: 100000, label: "$1,000", image: "/money/bill-1000.png", type: "bill" },
-];
+import { MONEY, type MoneyItem } from "../lib/money";
 
 const STORAGE_KEY = "cuenta-pesos-v1";
 const pesos = new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" });
@@ -64,6 +39,7 @@ export default function Home() {
   const [counts, setCounts] = useState<Record<string, number>>({});
   const [loaded, setLoaded] = useState(false);
   const [confirmClear, setConfirmClear] = useState(false);
+  const [exportState, setExportState] = useState<"idle" | "loading" | "success" | "error">("idle");
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
@@ -107,6 +83,47 @@ export default function Home() {
     }
     setCounts({});
     setConfirmClear(false);
+  };
+
+  const exportDailyCut = async () => {
+    if (!totalPieces || exportState === "loading") return;
+    setExportState("loading");
+
+    try {
+      const now = new Date();
+      const localDate = [
+        now.getFullYear(),
+        String(now.getMonth() + 1).padStart(2, "0"),
+        String(now.getDate()).padStart(2, "0"),
+      ].join("-");
+      const response = await fetch("/api/export", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          counts,
+          generatedAt: now.toISOString(),
+          localDate,
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        }),
+      });
+
+      if (!response.ok) throw new Error("No se pudo generar el archivo");
+
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `corte-pesos-${localDate}.xlsx`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      setExportState("success");
+      window.setTimeout(() => setExportState("idle"), 2200);
+    } catch {
+      setExportState("error");
+      window.setTimeout(() => setExportState("idle"), 3000);
+    }
   };
 
   const bills = MONEY.filter((item) => item.type === "bill").sort((a, b) => b.value - a.value);
@@ -160,10 +177,16 @@ export default function Home() {
           <span>Total de sesión</span>
           <strong>{pesos.format(totalCents / 100)}</strong>
         </div>
-        <button className={confirmClear ? "confirm" : ""} onClick={clear} disabled={!totalPieces}>
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2m3 0-1 14H6L5 6m4 4v6m6-6v6" /></svg>
-          {confirmClear ? "¿Confirmar?" : "Limpiar"}
-        </button>
+        <div className="footer-actions">
+          <button className={`export-button ${exportState}`} onClick={exportDailyCut} disabled={!totalPieces || exportState === "loading"}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M5 20h14" /></svg>
+            {exportState === "loading" ? "Generando…" : exportState === "success" ? "¡Descargado!" : exportState === "error" ? "Reintentar" : "Exportar Excel"}
+          </button>
+          <button className={`clear-button ${confirmClear ? "confirm" : ""}`} onClick={clear} disabled={!totalPieces}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2m3 0-1 14H6L5 6m4 4v6m6-6v6" /></svg>
+            {confirmClear ? "¿Confirmar?" : "Limpiar"}
+          </button>
+        </div>
       </footer>
 
       <p className="source-note">Imágenes de referencia: Banco de México · Los datos se guardan únicamente en este dispositivo.</p>

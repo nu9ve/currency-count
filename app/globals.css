@@ -93,13 +93,17 @@ button { font: inherit; -webkit-tap-highlight-color: transparent; }
   background: rgba(19, 29, 24, .94); backdrop-filter: blur(16px); color: white; display: flex; align-items: center; justify-content: space-between;
   box-shadow: 0 14px 40px rgba(10, 24, 17, .28);
 }
-.action-bar div { display: flex; flex-direction: column; gap: 2px; }
+.action-bar > div:first-child { display: flex; flex-direction: column; gap: 2px; }
 .action-bar span { color: #aebbb4; font-size: 10px; }
 .action-bar strong { font-size: 20px; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
 .action-bar button { height: 48px; padding: 0 17px; border: 0; border-radius: 14px; background: #fff; color: #22332b; font-size: 12px; font-weight: 800; display: flex; align-items: center; gap: 7px; cursor: pointer; }
 .action-bar button:disabled { opacity: .38; cursor: default; }
 .action-bar button.confirm { color: white; background: var(--orange); }
 .action-bar svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.footer-actions { display: flex; align-items: center; gap: 7px; }
+.action-bar .export-button { color: #fff; background: var(--green); }
+.action-bar .export-button.success { color: #123f31; background: #9be2c2; }
+.action-bar .export-button.error { color: #fff; background: var(--orange); }
 .source-note { margin: 20px 0 0; text-align: center; color: #88918d; font-size: 10px; }
 
 @media (max-width: 820px) {
@@ -125,6 +129,9 @@ button { font: inherit; -webkit-tap-highlight-color: transparent; }
   .count-control { grid-template-columns: 31px 1fr 43px; height: 30px; }
   .times-ten { font-size: 10px; }
   .count { font-size: 12px; }
+  .action-bar { padding-left: 15px; }
+  .action-bar strong { font-size: 17px; }
+  .action-bar button { padding: 0 12px; }
 }
 
 @media (max-width: 380px) {
@@ -134,6 +141,8 @@ button { font: inherit; -webkit-tap-highlight-color: transparent; }
   .piece-summary span:last-child { display: none; }
   .bill .money-picture { flex-basis: 69px; }
   .money-info small { display: none; }
+  .action-bar button { width: 48px; padding: 0; justify-content: center; font-size: 0; }
+  .action-bar button svg { width: 18px; height: 18px; }
 }
 
 @media (min-width: 821px) {

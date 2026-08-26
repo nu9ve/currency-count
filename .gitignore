@@ -12,6 +12,7 @@
 
 # Test coverage
 /coverage/
+/outputs/
 
 # Logs
 npm-debug.log*
