@@ -1,6 +1,6 @@
-# Cuenta Pesos
+# Cuenta Pesos · Herramienta Vanily
 
-Calculadora de billetes y monedas mexicanas diseñada para contar efectivo rápidamente desde el celular o una computadora.
+Herramienta gratuita de Vanily, diseñada por Nu9ve, para contar billetes y monedas mexicanas rápidamente desde el celular o una computadora. Puede usarla cualquier negocio para agilizar su corte de caja.
 
 La aplicación permite sumar cada denominación de forma individual, agregar diez piezas con un toque y consultar en tiempo real el total de efectivo y de piezas contadas.
 
@@ -18,6 +18,8 @@ La aplicación permite sumar cada denominación de forma individual, agregar die
 - Exportación del corte diario a un archivo Excel `.xlsx` con fórmulas y totales.
 - Reinicio del conteo con confirmación.
 - Interfaz responsive con prioridad para dispositivos móviles.
+- Temas claro y oscuro con la identidad visual de Vanily.
+- Logo de Vanily en el encabezado y crédito de Nu9ve en el pie.
 
 ## Tecnologías
 
@@ -72,6 +74,7 @@ currency-count/
 │   ├── layout.tsx      # Metadatos y layout raíz
 │   └── page.tsx        # Interfaz y lógica del contador
 ├── public/
+│   ├── brand/          # Logos de Vanily y Nu9ve
 │   └── money/          # Imágenes locales de las denominaciones
 ├── package.json
 └── tsconfig.json

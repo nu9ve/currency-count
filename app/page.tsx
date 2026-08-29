@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { MONEY, type MoneyItem } from "../lib/money";
 
 const STORAGE_KEY = "cuenta-pesos-v1";
+const THEME_STORAGE_KEY = "cuenta-pesos-theme-v1";
 const pesos = new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" });
 
 function MoneyCard({ item, count, onAdd, onSubtract }: {
@@ -38,6 +39,7 @@ function MoneyCard({ item, count, onAdd, onSubtract }: {
 export default function Home() {
   const [counts, setCounts] = useState<Record<string, number>>({});
   const [loaded, setLoaded] = useState(false);
+  const [dark, setDark] = useState(false);
   const [confirmClear, setConfirmClear] = useState(false);
   const [exportState, setExportState] = useState<"idle" | "loading" | "success" | "error">("idle");
 
@@ -57,6 +59,26 @@ export default function Home() {
   useEffect(() => {
     if (loaded) localStorage.setItem(STORAGE_KEY, JSON.stringify(counts));
   }, [counts, loaded]);
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => {
+      try {
+        setDark(window.localStorage.getItem(THEME_STORAGE_KEY) === "dark");
+      } catch {
+        setDark(false);
+      }
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = dark ? "dark" : "light";
+    try {
+      window.localStorage.setItem(THEME_STORAGE_KEY, dark ? "dark" : "light");
+    } catch {
+      // El tema sigue funcionando aunque el navegador bloquee el almacenamiento local.
+    }
+  }, [dark]);
 
   const { totalCents, totalPieces, coinPieces, billPieces } = useMemo(() => MONEY.reduce(
     (totals, item) => {
@@ -130,19 +152,45 @@ export default function Home() {
   const coins = MONEY.filter((item) => item.type === "coin").sort((a, b) => b.value - a.value);
 
   return (
-    <main className="app-shell">
+    <main className="app-shell" id="inicio">
       <header className="topbar">
-        <div className="brand-mark" aria-hidden="true">$</div>
-        <div>
-          <p>CAJA RÁPIDA</p>
-          <h1>Cuenta Pesos</h1>
+        <a className="brand" href="#inicio" aria-label="Cuenta Pesos, herramienta de Vanily">
+          <Image
+            className="brand-logo"
+            src={dark ? "/brand/logo-dorado.png" : "/brand/logo-vino.png"}
+            width={140}
+            height={87}
+            alt="Vanily"
+            priority
+          />
+          <span className="brand-divider" aria-hidden="true" />
+          <span className="brand-copy">
+            <small>Herramienta gratuita de</small>
+            <strong>Cuenta Pesos</strong>
+          </span>
+        </a>
+        <nav className="topbar-nav" aria-label="Secciones del contador">
+          <a href="#billetes">Billetes</a>
+          <a href="#monedas">Monedas</a>
+        </nav>
+        <div className="topbar-actions">
+          <span className="saved"><i /> Guardado local</span>
+          <button
+            className="theme-switch"
+            type="button"
+            onClick={() => setDark((value) => !value)}
+            aria-label={dark ? "Activar tema claro" : "Activar tema oscuro"}
+            title={dark ? "Cambiar a tema claro" : "Cambiar a tema oscuro"}
+          >
+            <span aria-hidden="true">{dark ? "☀" : "☾"}</span>
+          </button>
         </div>
-        <span className="saved"><i /> Guardado local</span>
       </header>
 
       <section className="total-card" aria-live="polite">
         <div>
-          <p>Total contado</p>
+          <p className="total-kicker">Vanily · control de caja</p>
+          <span className="total-label">Total contado</span>
           <strong>{pesos.format(totalCents / 100)}</strong>
           <span>MXN</span>
         </div>
@@ -152,7 +200,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="money-section bills-section">
+      <section className="money-section bills-section" id="billetes">
         <div className="section-heading">
           <h2>Billetes</h2>
           <span>Familia G</span>
@@ -162,7 +210,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="money-section coins-section">
+      <section className="money-section coins-section" id="monedas">
         <div className="section-heading">
           <h2>Monedas</h2>
           <span>9 denominaciones</span>
@@ -172,7 +220,7 @@ export default function Home() {
         </div>
       </section>
 
-      <footer className="action-bar">
+      <div className="action-bar" role="region" aria-label="Acciones de sesión">
         <div>
           <span>Total de sesión</span>
           <strong>{pesos.format(totalCents / 100)}</strong>
@@ -187,9 +235,29 @@ export default function Home() {
             {confirmClear ? "¿Confirmar?" : "Limpiar"}
           </button>
         </div>
-      </footer>
+      </div>
 
       <p className="source-note">Imágenes de referencia: Banco de México · Los datos se guardan únicamente en este dispositivo.</p>
+
+      <footer className="site-footer">
+        <div className="footer-copy">
+          <span className="footer-kicker">Una herramienta abierta para cualquier negocio</span>
+          <p>Cuenta Pesos te ayuda a cerrar tu caja en segundos. Gratis, simple y con el sello de Vanily.</p>
+        </div>
+        <div className="footer-credit">
+          <span>Diseñado y desarrollado por</span>
+          <Image
+            src={dark ? "/brand/nu9vexyz.png" : "/brand/nu9vexyz-black.png"}
+            width={455}
+            height={108}
+            alt="Nu9ve"
+          />
+        </div>
+        <div className="footer-bottom">
+          <span>Cuenta Pesos · Vanily</span>
+          <span>Hecho por Nu9ve</span>
+        </div>
+      </footer>
     </main>
   );
 }

@@ -11,9 +11,10 @@ type ExportPayload = {
 };
 
 const currencyFormat = '"$"#,##0.00';
-const green = "176B52";
-const darkGreen = "102D24";
-const paleGreen = "E3F2EB";
+const wine = "570125";
+const burgundy = "3D0015";
+const gold = "C9A84C";
+const paleWine = "F3E4CD";
 
 function safeCount(value: unknown) {
   if (typeof value !== "number" || !Number.isFinite(value)) return 0;
@@ -45,14 +46,14 @@ export async function POST(request: Request) {
     const coinPieces = totalPieces - billPieces;
 
     const workbook = new ExcelJS.Workbook();
-    workbook.creator = "Cuenta Pesos";
+    workbook.creator = "Cuenta Pesos · Vanily · Nu9ve";
     workbook.created = generatedAt;
     workbook.modified = generatedAt;
     workbook.subject = `Corte diario de efectivo ${localDate}`;
     workbook.title = `Corte de caja ${localDate}`;
 
     const sheet = workbook.addWorksheet("Corte diario", {
-      properties: { tabColor: { argb: green } },
+      properties: { tabColor: { argb: wine } },
       pageSetup: { paperSize: 9, orientation: "portrait", fitToPage: true, fitToWidth: 1, fitToHeight: 1 },
       views: [{ state: "frozen", ySplit: 7, showGridLines: false }],
     });
@@ -67,9 +68,9 @@ export async function POST(request: Request) {
 
     sheet.mergeCells("A1:E1");
     const title = sheet.getCell("A1");
-    title.value = "CUENTA PESOS · CORTE DIARIO";
+    title.value = "CUENTA PESOS · VANILY · CORTE DIARIO";
     title.font = { name: "Aptos Display", size: 18, bold: true, color: { argb: "FFFFFF" } };
-    title.fill = { type: "pattern", pattern: "solid", fgColor: { argb: darkGreen } };
+    title.fill = { type: "pattern", pattern: "solid", fgColor: { argb: burgundy } };
     title.alignment = { vertical: "middle", horizontal: "left" };
     sheet.getRow(1).height = 38;
 
@@ -91,27 +92,27 @@ export async function POST(request: Request) {
 
     ["A2", "A3", "A4", "D2", "D3", "D4"].forEach((address) => {
       const cell = sheet.getCell(address);
-      cell.font = { bold: true, color: { argb: darkGreen } };
+      cell.font = { bold: true, color: { argb: wine } };
     });
     for (let row = 2; row <= 4; row += 1) {
       [1, 2, 4, 5].forEach((column) => {
         const cell = sheet.getCell(row, column);
-        cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: paleGreen } };
+        cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: paleWine } };
         cell.border = {
-          top: { style: "thin", color: { argb: "C8DED4" } },
-          bottom: { style: "thin", color: { argb: "C8DED4" } },
+          top: { style: "thin", color: { argb: "D7C19A" } },
+          bottom: { style: "thin", color: { argb: "D7C19A" } },
         };
       });
     }
-    sheet.getCell("B3").font = { size: 15, bold: true, color: { argb: green } };
-    sheet.getCell("E2").font = { size: 14, bold: true, color: { argb: green } };
+    sheet.getCell("B3").font = { size: 15, bold: true, color: { argb: wine } };
+    sheet.getCell("E2").font = { size: 14, bold: true, color: { argb: wine } };
 
     const headerRow = sheet.getRow(7);
     headerRow.values = ["Denominación", "Valor unitario", "Tipo", "Cantidad", "Subtotal"];
     headerRow.height = 25;
     headerRow.eachCell((cell) => {
       cell.font = { bold: true, color: { argb: "FFFFFF" } };
-      cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: green } };
+      cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: wine } };
       cell.alignment = { vertical: "middle", horizontal: "center" };
     });
 
@@ -125,17 +126,17 @@ export async function POST(request: Request) {
       row.getCell(4).numFmt = "#,##0";
       row.getCell(5).numFmt = currencyFormat;
       row.getCell(3).alignment = { vertical: "middle", horizontal: "center" };
-      row.getCell(4).font = { bold: true, color: { argb: "1E5AA8" } };
-      row.getCell(5).font = { bold: count > 0, color: { argb: count > 0 ? green : "64726B" } };
+      row.getCell(4).font = { bold: true, color: { argb: gold } };
+      row.getCell(5).font = { bold: count > 0, color: { argb: count > 0 ? wine : "705E63" } };
       row.alignment = { vertical: "middle" };
       row.height = 22;
       if (index % 2 === 1) {
         row.eachCell((cell) => {
-          cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "F7F9F7" } };
+          cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FCF7EB" } };
         });
       }
       row.eachCell((cell) => {
-        cell.border = { bottom: { style: "hair", color: { argb: "DDE3DF" } } };
+        cell.border = { bottom: { style: "hair", color: { argb: "E2D5C0" } } };
       });
     });
 
@@ -146,20 +147,20 @@ export async function POST(request: Request) {
     sheet.getCell("E24").numFmt = currencyFormat;
     [3, 4, 5].forEach((column) => {
       const cell = sheet.getCell(24, column);
-      cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: darkGreen } };
+      cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: burgundy } };
       cell.font = { bold: true, color: { argb: "FFFFFF" }, size: 12 };
       cell.alignment = { vertical: "middle", horizontal: column === 5 ? "right" : "center" };
     });
     sheet.getRow(24).height = 27;
 
     sheet.mergeCells("A26:E26");
-    sheet.getCell("A26").value = "Generado por Cuenta Pesos · El conteo permanece almacenado localmente en el dispositivo.";
-    sheet.getCell("A26").font = { italic: true, size: 9, color: { argb: "78847E" } };
+    sheet.getCell("A26").value = "Generado por Cuenta Pesos · Vanily · El conteo permanece almacenado localmente en el dispositivo.";
+    sheet.getCell("A26").font = { italic: true, size: 9, color: { argb: "705E63" } };
     sheet.getCell("A26").alignment = { horizontal: "center" };
     sheet.getRow(26).height = 20;
 
     sheet.pageSetup.printArea = "A1:E26";
-    sheet.headerFooter.oddFooter = "&LCuenta Pesos&C&F&R&P de &N";
+    sheet.headerFooter.oddFooter = "&LCuenta Pesos · Vanily&C&F&R&P de &N";
 
     const buffer = await workbook.xlsx.writeBuffer();
     return new Response(new Uint8Array(buffer), {
