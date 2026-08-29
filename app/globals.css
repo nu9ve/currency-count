@@ -429,7 +429,9 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--gold); outline-
   z-index: 1;
   inset: 0;
   pointer-events: none;
-  background: linear-gradient(180deg, rgba(26, 10, 15, .08) 0%, transparent 42%, rgba(26, 10, 15, .58) 100%);
+  background:
+    linear-gradient(90deg, rgba(26, 10, 15, .58) 0%, rgba(26, 10, 15, .18) 38%, transparent 74%),
+    linear-gradient(180deg, rgba(26, 10, 15, .24) 0%, transparent 46%, rgba(26, 10, 15, .68) 100%);
 }
 
 .bill .money-info {
@@ -439,18 +441,17 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--gold); outline-
   padding: 14px 16px;
   align-items: flex-start;
   justify-content: space-between;
-  mix-blend-mode: difference;
-  color: #fff;
+  color: var(--cream);
+  text-shadow: 0 2px 5px rgba(26, 10, 15, .55);
 }
 
 .bill .money-info strong {
-  color: #fff;
+  color: var(--cream);
   font-size: 25px;
-  text-shadow: 0 1px 0 rgba(0, 0, 0, .08);
 }
 
 .bill .money-info small {
-  color: #fff;
+  color: rgba(252, 247, 235, .92);
   font-size: 10px;
 }
 
@@ -544,10 +545,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--gold); outline-
   transform: translateX(50%);
 }
 
-.action-bar > div:first-child { display: flex; flex-direction: column; gap: 3px; }
+.action-bar > div:first-child { min-width: 0; display: flex; flex: 1; flex-direction: column; gap: 3px; }
 .action-bar span { color: #dec6ce; font-size: 10px; }
 .action-bar strong { color: var(--cream); font-size: 21px; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
-.footer-actions { display: flex; align-items: center; gap: 8px; }
+.footer-actions { display: flex; flex: 0 0 auto; align-items: center; justify-content: center; gap: 8px; }
 
 .action-bar button {
   height: 48px;
@@ -562,6 +563,8 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--gold); outline-
   background: var(--gold);
   font-size: 12px;
   font-weight: 800;
+  line-height: 1;
+  text-align: center;
   cursor: pointer;
   transition: transform .2s ease, background .2s ease, color .2s ease;
 }
@@ -577,6 +580,8 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--gold); outline-
 .action-bar svg {
   width: 16px;
   height: 16px;
+  display: block;
+  flex: 0 0 auto;
   fill: none;
   stroke: currentColor;
   stroke-width: 1.8;
@@ -616,17 +621,43 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--gold); outline-
 .footer-credit {
   justify-self: end;
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 12px;
-  color: var(--muted);
-  font-size: 10px;
-  letter-spacing: .08em;
-  text-transform: uppercase;
+  align-items: center;
+}
+
+.footer-lockup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.footer-v-logo {
+  width: 26px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.footer-multiplier {
+  color: var(--gold);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.nu9ve-link {
+  display: flex;
+  align-items: center;
+  padding: 5px 0;
+  transition: transform .2s ease;
+}
+
+.nu9ve-link:hover { transform: translateY(-2px); }
+
+.nu9ve-link:focus-visible {
+  outline-offset: 6px;
 }
 
 .footer-credit img {
-  width: min(170px, 52vw);
+  width: min(132px, 36vw);
   height: auto;
 }
 
@@ -688,6 +719,9 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--gold); outline-
 :root[data-theme="dark"] .bill .money-picture .money-image-backdrop {
   filter: blur(13px) saturate(.82) brightness(.68);
   opacity: .7;
+}
+:root[data-theme="dark"] .footer-v-logo {
+  filter: brightness(0) saturate(100%) invert(69%) sepia(51%) saturate(566%) hue-rotate(5deg) brightness(92%) contrast(88%);
 }
 :root[data-theme="dark"] .site-footer { color: var(--cream); background: var(--ink); }
 :root[data-theme="dark"] .footer-copy p { color: #dec6ce; }
@@ -772,8 +806,11 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--gold); outline-
   }
 
   .footer-copy p { font-size: 16px; }
-  .footer-credit { justify-self: start; align-items: flex-start; }
-  .footer-credit img { width: 150px; }
+  .footer-credit { justify-self: start; }
+  .footer-lockup { gap: 8px; }
+  .footer-v-logo { width: 23px; height: 25px; }
+  .footer-multiplier { font-size: 16px; }
+  .footer-credit img { width: 112px; }
   .footer-bottom { gap: 14px; flex-direction: column; }
 }
 
@@ -787,7 +824,8 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--gold); outline-
   .bill .money-main { min-height: 91px; }
   .bill .money-info { padding: 10px 11px; }
   .money-info small { display: none; }
-  .action-bar button { width: 44px; padding: 0; font-size: 0; }
+  .action-bar .footer-actions { display: grid; grid-template-columns: repeat(2, 44px); gap: 6px; align-items: center; justify-content: center; }
+  .action-bar button { width: 44px; padding: 0; display: grid; place-items: center; font-size: 0; }
   .action-bar button svg { width: 18px; height: 18px; }
 }
 

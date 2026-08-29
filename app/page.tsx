@@ -262,17 +262,21 @@ export default function Home() {
           <p>Cuenta Pesos te ayuda a cerrar tu caja en segundos. Gratis, simple y con el sello de Vanily.</p>
         </div>
         <div className="footer-credit">
-          <span>Diseñado y desarrollado por</span>
-          <Image
-            src={dark ? "/brand/nu9vexyz.png" : "/brand/nu9vexyz-black.png"}
-            width={455}
-            height={108}
-            alt="Nu9ve"
-          />
+          <span className="footer-lockup" aria-label="Vanily por Nu9ve">
+            <Image className="footer-v-logo" src="/brand/isotipo.png" width={486} height={514} alt="Vanily" />
+            <span className="footer-multiplier" aria-hidden="true">×</span>
+            <a className="nu9ve-link" href="https://nu9ve.xyz/agency" target="_blank" rel="noreferrer" aria-label="Visitar nu9ve.xyz/agency">
+              <Image
+                src={dark ? "/brand/nu9vexyz.png" : "/brand/nu9vexyz-black.png"}
+                width={455}
+                height={108}
+                alt="Nu9ve"
+              />
+            </a>
+          </span>
         </div>
         <div className="footer-bottom">
           <span>Cuenta Pesos · Vanily</span>
-          <span>Hecho por Nu9ve</span>
         </div>
       </footer>
     </main>
