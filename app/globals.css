@@ -630,9 +630,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--gold); outline-
   gap: 10px;
 }
 
-.footer-v-logo {
+.footer-credit .footer-v-logo {
   width: 26px;
   height: 28px;
+  flex: 0 0 26px;
   object-fit: contain;
 }
 
@@ -806,9 +807,9 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--gold); outline-
   }
 
   .footer-copy p { font-size: 16px; }
-  .footer-credit { justify-self: start; }
+  .footer-credit { justify-self: center; }
   .footer-lockup { gap: 8px; }
-  .footer-v-logo { width: 23px; height: 25px; }
+  .footer-credit .footer-v-logo { width: 23px; height: 25px; flex-basis: 23px; }
   .footer-multiplier { font-size: 16px; }
   .footer-credit img { width: 112px; }
   .footer-bottom { gap: 14px; flex-direction: column; }

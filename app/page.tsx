@@ -27,6 +27,7 @@ function MoneyCard({ item, count, onAdd, onSubtract }: {
               alt=""
               fill
               sizes="(max-width: 620px) 48vw, 360px"
+              loading="lazy"
               aria-hidden="true"
             />
           )}
@@ -35,8 +36,8 @@ function MoneyCard({ item, count, onAdd, onSubtract }: {
             src={item.image}
             alt={`${item.type === "coin" ? "Moneda" : "Billete"} mexicano de ${item.label}`}
             fill
-            sizes={item.type === "coin" ? "(max-width: 620px) 22vw, 72px" : "(max-width: 620px) 48vw, 360px"}
-            priority={item.value >= 20000}
+            sizes={item.type === "coin" ? "(max-width: 620px) 46px, 70px" : "(max-width: 620px) 48vw, 360px"}
+            loading={item.type === "bill" ? "eager" : "lazy"}
           />
         </span>
         <span className="money-info">
@@ -178,7 +179,8 @@ export default function Home() {
             width={140}
             height={87}
             alt="Vanily"
-            priority
+            sizes="(max-width: 620px) 72px, 92px"
+            preload
           />
           <span className="brand-divider" aria-hidden="true" />
           <span className="brand-copy">
@@ -263,13 +265,15 @@ export default function Home() {
         </div>
         <div className="footer-credit">
           <span className="footer-lockup" aria-label="Vanily por Nu9ve">
-            <Image className="footer-v-logo" src="/brand/isotipo.png" width={486} height={514} alt="Vanily" />
+            <Image className="footer-v-logo" src="/brand/isotipo.png" width={486} height={514} sizes="28px" loading="lazy" alt="Vanily" />
             <span className="footer-multiplier" aria-hidden="true">×</span>
             <a className="nu9ve-link" href="https://nu9ve.xyz/agency" target="_blank" rel="noreferrer" aria-label="Visitar nu9ve.xyz/agency">
               <Image
                 src={dark ? "/brand/nu9vexyz.png" : "/brand/nu9vexyz-black.png"}
                 width={455}
                 height={108}
+                sizes="(max-width: 620px) 112px, 132px"
+                loading="lazy"
                 alt="Nu9ve"
               />
             </a>
