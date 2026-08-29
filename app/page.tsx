@@ -20,7 +20,24 @@ function MoneyCard({ item, count, onAdd, onSubtract }: {
     <article className={`money-card ${item.type} ${count ? "active" : ""}`}>
       <button className="money-main" onClick={() => onAdd(1)} aria-label={`Agregar un ${item.type === "coin" ? "moneda" : "billete"} de ${item.label}`}>
         <span className="money-picture">
-          <Image src={item.image} alt={`${item.type === "coin" ? "Moneda" : "Billete"} mexicano de ${item.label}`} fill sizes={item.type === "coin" ? "72px" : "160px"} priority={item.value >= 20000} />
+          {item.type === "bill" && (
+            <Image
+              className="money-image-backdrop"
+              src={item.image}
+              alt=""
+              fill
+              sizes="(max-width: 620px) 48vw, 360px"
+              aria-hidden="true"
+            />
+          )}
+          <Image
+            className="money-image"
+            src={item.image}
+            alt={`${item.type === "coin" ? "Moneda" : "Billete"} mexicano de ${item.label}`}
+            fill
+            sizes={item.type === "coin" ? "(max-width: 620px) 22vw, 72px" : "(max-width: 620px) 48vw, 360px"}
+            priority={item.value >= 20000}
+          />
         </span>
         <span className="money-info">
           <strong>{item.label}</strong>

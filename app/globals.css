@@ -388,9 +388,74 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--gold); outline-
 }
 
 .bill .money-picture {
-  flex-basis: 116px;
-  height: 58px;
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  flex: none;
+  overflow: hidden;
+  background: var(--card-control);
 }
+
+.bill .money-main {
+  position: relative;
+  min-height: 118px;
+  padding: 0;
+  display: block;
+  overflow: hidden;
+  border-radius: 18px 18px 0 0;
+}
+
+.bill .money-picture .money-image-backdrop {
+  z-index: 0;
+  object-fit: cover;
+  filter: blur(13px) saturate(.82) brightness(.86);
+  opacity: .56;
+  transform: scale(1.14);
+}
+
+.bill .money-picture .money-image {
+  z-index: 1;
+  padding: 8px 16px;
+  object-fit: contain;
+  filter: saturate(.96) contrast(1.02) drop-shadow(0 5px 5px rgba(26, 10, 15, .24));
+  transition: transform .35s ease;
+}
+
+.bill .money-main::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(26, 10, 15, .08) 0%, transparent 42%, rgba(26, 10, 15, .58) 100%);
+}
+
+.bill .money-info {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  padding: 14px 16px;
+  align-items: flex-start;
+  justify-content: space-between;
+  mix-blend-mode: difference;
+  color: #fff;
+}
+
+.bill .money-info strong {
+  color: #fff;
+  font-size: 25px;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, .08);
+}
+
+.bill .money-info small {
+  color: #fff;
+  font-size: 10px;
+}
+
+.money-card:hover .money-picture .money-image { transform: scale(1.018); }
+.money-card:hover .money-picture .money-image-backdrop { transform: scale(1.17); }
 
 .money-info {
   min-width: 0;
@@ -620,6 +685,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--gold); outline-
     inset 0 1px 0 rgba(201, 168, 76, .38),
     inset 0 -1px 0 rgba(0, 0, 0, .25);
 }
+:root[data-theme="dark"] .bill .money-picture .money-image-backdrop {
+  filter: blur(13px) saturate(.82) brightness(.68);
+  opacity: .7;
+}
 :root[data-theme="dark"] .site-footer { color: var(--cream); background: var(--ink); }
 :root[data-theme="dark"] .footer-copy p { color: #dec6ce; }
 
@@ -673,7 +742,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--gold); outline-
   .money-card { border-radius: 14px; }
   .money-main { padding: 8px 7px 6px; gap: 5px; }
   .money-picture { flex-basis: 46px; height: 42px; }
-  .bill .money-picture { flex-basis: 78px; height: 47px; }
+  .bill .money-main { min-height: 98px; }
+  .bill .money-info { padding: 11px 12px; }
+  .bill .money-info strong { font-size: 20px; }
+  .bill .money-info small { font-size: 9px; }
   .money-info strong { font-size: 15px; }
   .money-info small { font-size: 8px; }
   .count-control { grid-template-columns: 31px 1fr 42px; height: 31px; }
@@ -712,7 +784,8 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--gold); outline-
   .total-card { padding: 21px 17px; }
   .total-card strong { font-size: 32px; }
   .piece-summary span:last-child { display: none; }
-  .bill .money-picture { flex-basis: 67px; }
+  .bill .money-main { min-height: 91px; }
+  .bill .money-info { padding: 10px 11px; }
   .money-info small { display: none; }
   .action-bar button { width: 44px; padding: 0; font-size: 0; }
   .action-bar button svg { width: 18px; height: 18px; }
